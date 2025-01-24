@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Symmetric Encrypt": {
+      "commandName": "Project",
+      "commandLineArgs": "SymmetricEncrypt ../../../hola.txt 123465 ../../../hola.aes -v"
+    },
+    "Symmetric Decrypt": {
+      "commandName": "Project",
+      "commandLineArgs": "SymmetricDecrypt ../../../hola.aes 123465 ../../../hola2.txt -v"
+    }
+  }
+}
