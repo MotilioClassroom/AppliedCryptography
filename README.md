@@ -24,5 +24,5 @@ como la protección contra ataques de tiempo, ataques de canal lateral, etc.
 - [System.Security.Cryptography](https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography?view=net-9.0)
 
 ## Licencia
-Este repositorio es de código abierto disponible completamente. Ver el archivo [LICENSE](LICENSE) para más detalles.
+Este repositorio es de código abierto disponible sin licencia. Ver el archivo [LICENSE](LICENSE) para más detalles.
 
