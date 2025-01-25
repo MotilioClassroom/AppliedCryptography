@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace CryptoLab
 {
+    /// <summary>
+    /// Interface for symmetric encryption
+    /// </summary>
     public interface ISymmetric
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="size"></param>
+        /// <returns></returns>
         byte[] CreateRandomByteArray(int size);
 
         /// <summary>
@@ -20,8 +28,22 @@ namespace CryptoLab
         /// <returns></returns>
         byte[] DeriveKey(string password, byte[] salt, int iterations, int keySize);
 
-        byte[] Encrypt(byte[] key, byte[] iv, byte[] plainData, byte[]? salt = null);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
+        /// <param name="plainData"></param>
+        /// <returns></returns>
+        byte[] Encrypt(byte[] key, byte[] iv, byte[] plainData);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
+        /// <param name="cipherData"></param>
+        /// <returns></returns>
         byte[] Decrypt(byte[] key, byte[] iv, byte[] cipherData);
     }
 }

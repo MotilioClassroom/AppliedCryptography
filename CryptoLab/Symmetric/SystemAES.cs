@@ -8,6 +8,9 @@ using System.Security.Cryptography;
 
 namespace CryptoLab.Symmetric;
 
+/// <summary>
+/// ISymmetric implementation using AES from System.Security.Cryptography
+/// </summary>
 public class SystemAES : ISymmetric
 {
     public byte[] CreateRandomByteArray(int size)
@@ -21,7 +24,7 @@ public class SystemAES : ISymmetric
         return key;
     }
 
-    public byte[] Encrypt(byte[] key, byte[] iv, byte[] plainData, byte[]? salt = null)
+    public byte[] Encrypt(byte[] key, byte[] iv, byte[] plainData)
     {
         using Aes aes = Aes.Create();
 
@@ -30,14 +33,9 @@ public class SystemAES : ISymmetric
 
         ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
 
-        using MemoryStream outputCipherStream = new();
-        outputCipherStream.Write(aes.IV, 0, aes.IV.Length);
-        if (salt != null)
-        {
-            outputCipherStream.Write(salt, 0, salt.Length);
-        }
+        using var outputCipherStream = new MemoryStream();
 
-        using CryptoStream cryptoStream = new(outputCipherStream, encryptor, CryptoStreamMode.Write);
+        using var cryptoStream = new CryptoStream(outputCipherStream, encryptor, CryptoStreamMode.Write);
 
         cryptoStream.Write(plainData, 0, plainData.Length);
         cryptoStream.Clear();
@@ -54,10 +52,10 @@ public class SystemAES : ISymmetric
 
         ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 
-        using MemoryStream inputCipherStream = new(cipherData);
-        using MemoryStream outputPlainStream = new();
+        using var inputCipherStream = new MemoryStream(cipherData);
+        using var outputPlainStream = new MemoryStream();
 
-        using CryptoStream cryptoStream = new(inputCipherStream, decryptor, CryptoStreamMode.Read);
+        using var cryptoStream = new CryptoStream(inputCipherStream, decryptor, CryptoStreamMode.Read);
 
         cryptoStream.CopyTo(outputPlainStream);
         cryptoStream.Clear();

@@ -17,11 +17,11 @@ internal class Program
         return new AppRunner<Program>().Run(args);
     }
 
-    public void SymmetricEncrypt(string InputFile, string Password, string OutputFile, [Option('v', null)] bool? verbose)
+    public static void SymmetricEncrypt(string InputFile, string Password, string OutputFile, [Option('v', null)] bool? verbose)
     {
         var input = File.ReadAllBytes(InputFile);
 
-        ISymmetric symmetric = new SystemAES();
+        ISymmetric symmetric = new BouncyCastleAES();
 
         var salt = symmetric.CreateRandomByteArray(SALT_SIZE);
         var iv = symmetric.CreateRandomByteArray(IV_SIZE);
@@ -34,13 +34,19 @@ internal class Program
             Console.WriteLine($"Key: {ByteArrayToString(key)}");
         }
 
-        var encrypted = symmetric.Encrypt(key, iv, input, salt);
+        var encrypted = symmetric.Encrypt(key, iv, input);
 
-        File.WriteAllBytes(OutputFile, encrypted);
+        var final = new byte[IV_SIZE + SALT_SIZE + encrypted.Length];
+
+        iv.CopyTo(final, 0);
+        salt.CopyTo(final, IV_SIZE);
+        encrypted.CopyTo(final, IV_SIZE + SALT_SIZE);
+
+        File.WriteAllBytes(OutputFile, final);
 
     }
 
-    public void SymmetricDecrypt(string InputFile, string Password, string OutputFile, [Option('v',null)] bool? verbose)
+    public static void SymmetricDecrypt(string InputFile, string Password, string OutputFile, [Option('v',null)] bool? verbose)
     {
         var input = File.ReadAllBytes(InputFile);
 
@@ -48,7 +54,7 @@ internal class Program
         var salt = input.Skip(IV_SIZE).Take(SALT_SIZE).ToArray();
         var data = input.Skip(IV_SIZE + SALT_SIZE).ToArray();
 
-        ISymmetric symmetric = new SystemAES();
+        ISymmetric symmetric = new BouncyCastleAES();
 
         var key = symmetric.DeriveKey(Password, salt, ITERATIONS, KEY_SIZE);
 
@@ -65,14 +71,14 @@ internal class Program
 
     }
 
-    public void AsymmetricEncrypt(string InputFile, string KeyFile, string OutputFile)
+    public static void AsymmetricEncrypt(string InputFile, string KeyFile, string OutputFile)
     {
 
     }
 
     private static string ByteArrayToString(byte[] ba)
     {
-        return BitConverter.ToString(ba).Replace("-", "");
+        return Convert.ToHexString(ba);
     }
 
 
