@@ -1,18 +1,18 @@
 # Applied Cryptography 
 
-Este repositorio contiene los ejemplos del taller de **Criptograf韆 Aplicada** impartido por el Tec de Monterrey.
+Este repositorio contiene los ejemplos del taller de **Criptograf铆a Aplicada** impartido por el Tec de Monterrey.
 
-**$${\color{red}Advertencia:}$$
-Este repositorio es solo para fines educativos y no debe usarse en un entorno de producci髇.**
+**Advertencia:
+Este repositorio es solo para fines educativos y no debe usarse en un entorno de producci贸n.**
 - No contiene los controles necesarios para garantizar la seguridad de los datos, 
-como la protecci髇 contra ataques de tiempo, ataques de canal lateral, etc. 
+como la protecci贸n contra ataques de tiempo, ataques de canal lateral, etc. 
 - No se han realizado pruebas de rendimiento ni pruebas de seguridad.
-- No se han realizado pruebas de seguridad ni auditor韆s de c骴igo.
-- No contiene manejo de errores adecuado ni de validaci髇 de datos de entrada.
+- No se han realizado pruebas de seguridad ni auditor铆as de c贸digo.
+- No contiene manejo de errores adecuado ni de validaci贸n de datos de entrada.
 
 
 ## Autor: 
-- Marco Otilio Pe馻 D韆z
+- Marco Otilio Pe帽a D铆az
 - motilio@tec.mx
 - 2021-09-20
 
@@ -24,5 +24,5 @@ como la protecci髇 contra ataques de tiempo, ataques de canal lateral, etc.
 - [System.Security.Cryptography](https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography?view=net-9.0)
 
 ## Licencia
-Este repositorio es de c骴igo abierto disponible completamente. Ver el archivo [LICENSE](LICENSE) para m醩 detalles.
+Este repositorio es de c贸digo abierto disponible completamente. Ver el archivo [LICENSE](LICENSE) para m谩s detalles.
 
