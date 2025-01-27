@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// SPDX-License-Identifier: Unlicense
+
 using System.Security.Cryptography;
 
 
@@ -11,7 +8,7 @@ namespace CryptoLab.Symmetric;
 /// <summary>
 /// ISymmetric implementation using AES from System.Security.Cryptography
 /// </summary>
-public class SystemAES : ISymmetric
+public class SystemAES : IAESCipher
 {
     public byte[] CreateRandomByteArray(int size)
     {

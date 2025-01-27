@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// SPDX-License-Identifier: Unlicense
 
-namespace CryptoLab
+namespace CryptoLab;
+
+public interface IHash
 {
-    public interface IHash
+    public enum Algorithm
     {
-        string Hash(byte[] data);
-
-        string Hash(string data);
-
+        SHA256,
+        SHA512,
     }
+
+    string ComputeHash(byte[] data, Algorithm algorithm);
+
+    string ComputeHash(string data, Algorithm algorithm);
+
 }

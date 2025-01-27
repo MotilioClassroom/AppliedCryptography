@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// SPDX-License-Identifier: Unlicense
 
 namespace CryptoLab
 {
     /// <summary>
     /// Interface for symmetric encryption
     /// </summary>
-    public interface ISymmetric
+    public interface IAESCipher
     {
         /// <summary>
         /// 

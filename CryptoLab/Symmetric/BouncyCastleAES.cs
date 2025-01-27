@@ -1,19 +1,16 @@
-﻿using Org.BouncyCastle.Crypto;
+﻿// SPDX-License-Identifier: Unlicense
+
+using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Paddings;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CryptoLab.Symmetric;
 
-public class BouncyCastleAES : ISymmetric
+public class BouncyCastleAES : IAESCipher
 {
     public byte[] CreateRandomByteArray(int size)
     {

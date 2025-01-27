@@ -1,8 +1,13 @@
-﻿namespace AppliedCryptographyCLI;
+﻿// SPDX-License-Identifier: Unlicense
+
+namespace AppliedCryptographyCLI;
 
 using CommandDotNet;
 using CryptoLab;
+using CryptoLab.Asymmetric;
+using CryptoLab.Hash;
 using CryptoLab.Symmetric;
+using System.Security.Cryptography;
 using System.Text;
 
 internal class Program
@@ -17,11 +22,27 @@ internal class Program
         return new AppRunner<Program>().Run(args);
     }
 
-    public static void SymmetricEncrypt(string InputFile, string Password, string OutputFile, [Option('v', null)] bool? verbose)
+
+#pragma warning disable CA1822 // Mark members as static
+    public void HashTest(string input)
+    {
+        var HashBC = new BouncyCastleHash();
+        var HashSys = new SystemHash();
+
+        var data = Encoding.UTF8.GetBytes(input);
+
+        var hashBC = HashBC.ComputeHash(data, IHash.Algorithm.SHA512);
+        var hashSys = HashSys.ComputeHash(input, IHash.Algorithm.SHA512);
+
+        Console.WriteLine($"BouncyCastle : {hashBC}");
+        Console.WriteLine($"System       : {hashSys}");
+    }
+
+    public void AESEncrypt(string InputFile, string Password, string OutputFile, [Option('v', null)] bool? verbose)
     {
         var input = File.ReadAllBytes(InputFile);
 
-        ISymmetric symmetric = new BouncyCastleAES();
+        IAESCipher symmetric = new SystemAES();
 
         var salt = symmetric.CreateRandomByteArray(SALT_SIZE);
         var iv = symmetric.CreateRandomByteArray(IV_SIZE);
@@ -46,7 +67,7 @@ internal class Program
 
     }
 
-    public static void SymmetricDecrypt(string InputFile, string Password, string OutputFile, [Option('v',null)] bool? verbose)
+    public void AESDecrypt(string InputFile, string Password, string OutputFile, [Option('v',null)] bool? verbose)
     {
         var input = File.ReadAllBytes(InputFile);
 
@@ -54,7 +75,7 @@ internal class Program
         var salt = input.Skip(IV_SIZE).Take(SALT_SIZE).ToArray();
         var data = input.Skip(IV_SIZE + SALT_SIZE).ToArray();
 
-        ISymmetric symmetric = new BouncyCastleAES();
+        IAESCipher symmetric = new BouncyCastleAES();
 
         var key = symmetric.DeriveKey(Password, salt, ITERATIONS, KEY_SIZE);
 
@@ -71,10 +92,55 @@ internal class Program
 
     }
 
-    public static void AsymmetricEncrypt(string InputFile, string KeyFile, string OutputFile)
+    public void RSAKeyGen(string PrivateKeyFile, string PublicKeyFile, [Option('v', null)] bool? verbose)
     {
+        IRSACipher rsa = new BouncyCastleRSA(2048);
+
+        var privateKey = rsa.GetPrivateKeyPEM();
+        var publicKey = rsa.GetPublicKeyPEM();
+
+        File.WriteAllText(PrivateKeyFile, privateKey);
+        File.WriteAllText(PublicKeyFile, publicKey);
+
+        if (verbose == true)
+        {
+            Console.WriteLine($"Private Key: {privateKey}");
+            Console.WriteLine($"Public Key: {publicKey}");
+        }
+    }
+
+    public  void RSAEncrypt(string InputFile, string PublicKeyFile, string OutputFile, [Option('v', null)] bool? verbose)
+    {
+        var publicKey = File.ReadAllText(PublicKeyFile);
+
+        IRSACipher rsa = new SystemRSA(2048);
+
+        rsa.ImportPublicKeyPEM(publicKey);
+
+        var input = File.ReadAllBytes(InputFile);
+
+        var encrypted = rsa.Encrypt(input);
+
+        File.WriteAllBytes(OutputFile, encrypted);
 
     }
+
+    public void RSADecrypt(string InputFile, string PrivateKeyFile, string OutputFile, [Option('v', null)] bool? verbose)
+    {
+        var privateKey = File.ReadAllText(PrivateKeyFile);
+
+        IRSACipher rsa = new BouncyCastleRSA(2048);
+
+        rsa.ImportPrivateKeyPEM(privateKey);
+
+        var input = File.ReadAllBytes(InputFile);
+
+        var decrypted = rsa.Decrypt(input);
+
+        File.WriteAllBytes(OutputFile, decrypted);
+    }
+
+#pragma warning restore CA1822 // Mark members as static
 
     private static string ByteArrayToString(byte[] ba)
     {

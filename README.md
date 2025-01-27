@@ -1,28 +1,38 @@
 # Applied Cryptography 
+[![en](https://img.shields.io/badge/lang-en-red.svg)](README.md)
+[![es](https://img.shields.io/badge/lang-es-yellow.svg)](README.es.md)
 
-Este repositorio contiene los ejemplos del taller de **Criptografía Aplicada** impartido por el Tec de Monterrey.
+This repository contains the examples for the **Applied Cryptography** workshop.
 
-**Advertencia:
-Este repositorio es solo para fines educativos y no debe usarse en un entorno de producción.**
-- No contiene los controles necesarios para garantizar la seguridad de los datos, 
-como la protección contra ataques de tiempo, ataques de canal lateral, etc. 
-- No se han realizado pruebas de rendimiento ni pruebas de seguridad.
-- No se han realizado pruebas de seguridad ni auditorías de código.
-- No contiene manejo de errores adecuado ni de validación de datos de entrada.
+Each example is programmed using Bouncy Castle and System.Security.Cryptography to demonstrate 
+how these libraries can be used to perform cryptographic operations.
 
+The classes are interchangeable.
 
-## Autor: 
+> [!CAUTION]
+> **This repository is for educational purposes only and should not be used in a production environment.**
+> - It does not include the necessary controls to ensure data security, such as protection against timing attacks, side-channel attacks, etc.
+> - Performance testing has not been conducted.
+> - Security testing and code audits have not been performed.
+> - It does not include proper error handling or input data validation.
+
+## Author 
 - Marco Otilio Peña Díaz
 - motilio@tec.mx
-- 2021-09-20
 
-## Dependencias
+## Dependencies
 
 - [.NET 9.0](https://dotnet.microsoft.com/download/dotnet/9.0)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/vs/)
 - [BouncyCastle 2.5.0](https://www.bouncycastle.org/csharp/index.html)
 - [System.Security.Cryptography](https://docs.microsoft.com/en-us/dotnet/api/system.security.cryptography?view=net-9.0)
 
-## Licencia
-Este repositorio es de código abierto disponible sin licencia. Ver el archivo [LICENSE](LICENSE) para más detalles.
+## License
+This repository is open-source and available without a license. See the LICENSE file for more details.
+
+
+
+
+
+
 

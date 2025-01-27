@@ -1,12 +1,28 @@
 {
   "profiles": {
-    "Symmetric Encrypt": {
+    "Hash Test": {
       "commandName": "Project",
-      "commandLineArgs": "SymmetricEncrypt ../../../hola.txt 123465 ../../../hola.aes -v"
+      "commandLineArgs": "HashTest \"Hello world\""
     },
-    "Symmetric Decrypt": {
+    "AES Encrypt": {
       "commandName": "Project",
-      "commandLineArgs": "SymmetricDecrypt ../../../hola.aes 123465 ../../../hola2.txt -v"
+      "commandLineArgs": "AESEncrypt ../../../hola.txt 123465 ../../../hola.aes -v"
+    },
+    "AES Decrypt": {
+      "commandName": "Project",
+      "commandLineArgs": "AESDecrypt ../../../hola.aes 123465 ../../../hola2.txt -v"
+    },
+    "RSA KeyGen": {
+      "commandName": "Project",
+      "commandLineArgs": "RSAKeyGen ../../../rsa.key ../../../rsa.pub -v"
+    },
+    "RSA Encrypt": {
+      "commandName": "Project",
+      "commandLineArgs": "RSAEncrypt ../../../hola.txt ../../../rsa.pub ../../../hola.rsa_enc -v"
+    },
+    "RSA Decrypt": {
+      "commandName": "Project",
+      "commandLineArgs": "RSADecrypt ../../../hola.rsa_enc ../../../rsa.key ../../../hola3.txt -v"
     }
   }
 }
