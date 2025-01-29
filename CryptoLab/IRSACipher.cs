@@ -20,4 +20,8 @@ public interface IRSACipher
     byte[] Encrypt(byte[] data);
 
     byte[] Decrypt(byte[] data);
+
+    byte[] SignData(byte[] data);
+
+    bool VerifyData(byte[] data, byte[] signature);
 }

@@ -6,12 +6,13 @@ public interface IHash
 {
     public enum Algorithm
     {
+        MD5,
         SHA256,
         SHA512,
     }
 
-    string ComputeHash(byte[] data, Algorithm algorithm);
+    byte[] ComputeHash(byte[] data, Algorithm algorithm);
 
-    string ComputeHash(string data, Algorithm algorithm);
+    byte[] ComputeHash(string data, Algorithm algorithm);
 
 }

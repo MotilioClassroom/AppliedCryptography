@@ -4,18 +4,13 @@ using System.Security.Cryptography;
 
 namespace CryptoLab.Asymmetric;
 
-public class SystemRSA : IRSACipher
+public class SystemRSA(int keySizeBits = 4096) : IRSACipher
 {
-    private readonly RSA rsa;
-
-    public SystemRSA(int keySizeBits = 4096)
-    {
-        rsa = RSA.Create(keySizeBits);
-    }
+    private readonly RSA rsa = RSA.Create(keySizeBits);
 
     public string GetPrivateKeyPEM()
     {
-        return rsa.ExportPkcs8PrivateKeyPem();
+        return rsa.ExportRSAPrivateKeyPem();
     }
 
     public void ImportPrivateKeyPEM(string privateKeyPEM)
@@ -45,5 +40,19 @@ public class SystemRSA : IRSACipher
         var decryptedData = rsa.Decrypt(data, RSAEncryptionPadding.OaepSHA256);
 
         return decryptedData;
+    }
+
+    public byte[] SignData(byte[] data)
+    {
+        var signature = rsa.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+        
+        return signature;
+    }
+
+    public bool VerifyData(byte[] data, byte[] signature)
+    {
+        var isVerified = rsa.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+        return isVerified;
     }
 }

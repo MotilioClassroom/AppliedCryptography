@@ -8,7 +8,6 @@ using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace CryptoLab.Asymmetric;
@@ -104,5 +103,20 @@ public class BouncyCastleRSA : IRSACipher
 
     }
 
+    public byte[] SignData(byte[] data)
+    {
+        var signer = SignerUtilities.GetSigner("SHA-256withRSA");
+        signer.Init(true, privateKey);
+        signer.BlockUpdate(data, 0, data.Length);
+        var signature = signer.GenerateSignature();
+        return signature;
+    }
 
+    public bool VerifyData(byte[] data, byte[] signature)
+    {
+        var verifier = SignerUtilities.GetSigner("SHA-256withRSA");
+        verifier.Init(false, publicKey);
+        verifier.BlockUpdate(data, 0, data.Length);
+        return verifier.VerifySignature(signature);
+    }
 }

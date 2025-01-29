@@ -4,25 +4,61 @@
       "commandName": "Project",
       "commandLineArgs": "HashTest \"Hello world\""
     },
-    "AES Encrypt": {
+    "AES Encrypt System": {
       "commandName": "Project",
-      "commandLineArgs": "AESEncrypt ../../../hola.txt 123465 ../../../hola.aes -v"
+      "commandLineArgs": "AESEncrypt ../../../hola.txt 123465 ../../../hola.enc -v"
     },
-    "AES Decrypt": {
+    "AES Encrypt BouncyCastle": {
       "commandName": "Project",
-      "commandLineArgs": "AESDecrypt ../../../hola.aes 123465 ../../../hola2.txt -v"
+      "commandLineArgs": "AESEncrypt ../../../hola.txt 123465 ../../../hola.enc -b -v"
     },
-    "RSA KeyGen": {
+    "AES Decrypt System": {
       "commandName": "Project",
-      "commandLineArgs": "RSAKeyGen ../../../rsa.key ../../../rsa.pub -v"
+      "commandLineArgs": "AESDecrypt ../../../hola.enc 123465 ../../../hola2.txt -v"
     },
-    "RSA Encrypt": {
+    "AES Decrypt BouncyCastle": {
       "commandName": "Project",
-      "commandLineArgs": "RSAEncrypt ../../../hola.txt ../../../rsa.pub ../../../hola.rsa_enc -v"
+      "commandLineArgs": "AESDecrypt ../../../hola.enc 123465 ../../../hola2.txt -b -v"
     },
-    "RSA Decrypt": {
+    "RSA KeyGen System": {
       "commandName": "Project",
-      "commandLineArgs": "RSADecrypt ../../../hola.rsa_enc ../../../rsa.key ../../../hola3.txt -v"
+      "commandLineArgs": "RSAKeyGen ../../../private_key.pem ../../../public_key.pem -v"
+    },
+    "RSA KeyGen BouncyCastle": {
+      "commandName": "Project",
+      "commandLineArgs": "RSAKeyGen ../../../private_key.pem ../../../public_key.pem -b -v"
+    },
+    "RSA Encrypt System": {
+      "commandName": "Project",
+      "commandLineArgs": "RSAEncrypt ../../../hola.txt ../../../public_key.pem ../../../hola_rsa.enc -v"
+    },
+    "RSA Encrypt BouncyCastle": {
+      "commandName": "Project",
+      "commandLineArgs": "RSAEncrypt ../../../hola.txt ../../../public_key.pem ../../../hola_rsa.enc -b -v"
+    },
+    "RSA Decrypt System": {
+      "commandName": "Project",
+      "commandLineArgs": "RSADecrypt ../../../hola_rsa.enc ../../../private_key.pem ../../../hola3.txt -v"
+    },
+    "RSA Decrypt BouncyCastle": {
+      "commandName": "Project",
+      "commandLineArgs": "RSADecrypt ../../../hola_rsa.enc ../../../private_key.pem ../../../hola3.txt -b -v"
+    },
+    "RSA Sign System": {
+      "commandName": "Project",
+      "commandLineArgs": "RSASign ../../../hola.txt ../../../private_key.pem ../../../hola.sig -v"
+    },
+    "RSA Sign BouncyCastle": {
+      "commandName": "Project",
+      "commandLineArgs": "RSASign ../../../hola.txt ../../../private_key.pem ../../../hola.sig -b -v"
+    },
+    "RSA Verify System": {
+      "commandName": "Project",
+      "commandLineArgs": "RSAVerify ../../../hola.txt ../../../public_key.pem ../../../hola.sig -v"
+    },
+    "RSA Verify BouncyCastle": {
+      "commandName": "Project",
+      "commandLineArgs": "RSAVerify ../../../hola.txt ../../../public_key.pem ../../../hola.sig -b -v"
     }
   }
 }

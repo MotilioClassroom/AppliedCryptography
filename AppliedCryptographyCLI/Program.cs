@@ -17,6 +17,9 @@ internal class Program
     const int SALT_SIZE = 16;
     const int IV_SIZE = 16;
 
+
+    const int RSA_KEY_SIZE = 2048;
+
     static int Main(string[] args)
     {
         return new AppRunner<Program>().Run(args);
@@ -31,24 +34,24 @@ internal class Program
 
         var data = Encoding.UTF8.GetBytes(input);
 
-        var hashBC = HashBC.ComputeHash(data, IHash.Algorithm.SHA512);
-        var hashSys = HashSys.ComputeHash(input, IHash.Algorithm.SHA512);
+        var hashBC = HashBC.ComputeHash(data, IHash.Algorithm.SHA256);
+        var hashSys = HashSys.ComputeHash(input, IHash.Algorithm.SHA256);
 
-        Console.WriteLine($"BouncyCastle : {hashBC}");
-        Console.WriteLine($"System       : {hashSys}");
+        Console.WriteLine($"BouncyCastle : {Convert.ToHexString(hashBC)}");
+        Console.WriteLine($"System       : {Convert.ToHexString(hashBC)}");
     }
 
-    public void AESEncrypt(string InputFile, string Password, string OutputFile, [Option('v', null)] bool? verbose)
+    public void AESEncrypt(string InputFile, string Password, string OutputFile, [Option('b',null)] bool? UseBouncyCastle, [Option('v', null)] bool? Verbose)
     {
         var input = File.ReadAllBytes(InputFile);
 
-        IAESCipher symmetric = new SystemAES();
+        IAESCipher symmetric = UseBouncyCastle == true ? new BouncyCastleAES() : new SystemAES();
 
         var salt = symmetric.CreateRandomByteArray(SALT_SIZE);
         var iv = symmetric.CreateRandomByteArray(IV_SIZE);
         var key = symmetric.DeriveKey(Password, salt, ITERATIONS, KEY_SIZE);
 
-        if (verbose == true)
+        if (Verbose == true)
         {
             Console.WriteLine($"Salt: {ByteArrayToString(salt)}");
             Console.WriteLine($"IV: {ByteArrayToString(iv)}");
@@ -67,7 +70,7 @@ internal class Program
 
     }
 
-    public void AESDecrypt(string InputFile, string Password, string OutputFile, [Option('v',null)] bool? verbose)
+    public void AESDecrypt(string InputFile, string Password, string OutputFile, [Option('b', null)] bool? UseBouncyCastle, [Option('v',null)] bool? Verbose)
     {
         var input = File.ReadAllBytes(InputFile);
 
@@ -75,11 +78,11 @@ internal class Program
         var salt = input.Skip(IV_SIZE).Take(SALT_SIZE).ToArray();
         var data = input.Skip(IV_SIZE + SALT_SIZE).ToArray();
 
-        IAESCipher symmetric = new BouncyCastleAES();
+        IAESCipher symmetric = UseBouncyCastle == true ? new BouncyCastleAES() : new SystemAES();
 
         var key = symmetric.DeriveKey(Password, salt, ITERATIONS, KEY_SIZE);
 
-        if (verbose == true)
+        if (Verbose == true)
         {
             Console.WriteLine($"Salt: {ByteArrayToString(salt)}");
             Console.WriteLine($"IV: {ByteArrayToString(iv)}");
@@ -92,9 +95,9 @@ internal class Program
 
     }
 
-    public void RSAKeyGen(string PrivateKeyFile, string PublicKeyFile, [Option('v', null)] bool? verbose)
+    public void RSAKeyGen(string PrivateKeyFile, string PublicKeyFile, [Option('b', null)] bool? UseBouncyCastle, [Option('v', null)] bool? Verbose)
     {
-        IRSACipher rsa = new BouncyCastleRSA(2048);
+        IRSACipher rsa = UseBouncyCastle == true ? new BouncyCastleRSA(RSA_KEY_SIZE) : new SystemRSA(RSA_KEY_SIZE);
 
         var privateKey = rsa.GetPrivateKeyPEM();
         var publicKey = rsa.GetPublicKeyPEM();
@@ -102,18 +105,18 @@ internal class Program
         File.WriteAllText(PrivateKeyFile, privateKey);
         File.WriteAllText(PublicKeyFile, publicKey);
 
-        if (verbose == true)
+        if (Verbose == true)
         {
             Console.WriteLine($"Private Key: {privateKey}");
             Console.WriteLine($"Public Key: {publicKey}");
         }
     }
 
-    public  void RSAEncrypt(string InputFile, string PublicKeyFile, string OutputFile, [Option('v', null)] bool? verbose)
+    public  void RSAEncrypt(string InputFile, string PublicKeyFile, string OutputFile, [Option('b', null)] bool? UseBouncyCastle, [Option('v', null)] bool? Verbose)
     {
         var publicKey = File.ReadAllText(PublicKeyFile);
 
-        IRSACipher rsa = new SystemRSA(2048);
+        IRSACipher rsa = UseBouncyCastle == true ? new BouncyCastleRSA(RSA_KEY_SIZE) : new SystemRSA(RSA_KEY_SIZE);
 
         rsa.ImportPublicKeyPEM(publicKey);
 
@@ -125,11 +128,11 @@ internal class Program
 
     }
 
-    public void RSADecrypt(string InputFile, string PrivateKeyFile, string OutputFile, [Option('v', null)] bool? verbose)
+    public void RSADecrypt(string InputFile, string PrivateKeyFile, string OutputFile, [Option('b', null)] bool? UseBouncyCastle, [Option('v', null)] bool? Verbose)
     {
         var privateKey = File.ReadAllText(PrivateKeyFile);
 
-        IRSACipher rsa = new BouncyCastleRSA(2048);
+        IRSACipher rsa = UseBouncyCastle == true ? new BouncyCastleRSA(RSA_KEY_SIZE) : new SystemRSA(RSA_KEY_SIZE);
 
         rsa.ImportPrivateKeyPEM(privateKey);
 
@@ -138,6 +141,38 @@ internal class Program
         var decrypted = rsa.Decrypt(input);
 
         File.WriteAllBytes(OutputFile, decrypted);
+    }
+
+    public void RSASign(string InputFile, string PrivateKeyFile, string OutputFile, [Option('b', null)] bool? UseBouncyCastle, [Option('v', null)] bool? Verbose)
+    {
+        var privateKey = File.ReadAllText(PrivateKeyFile);
+
+        IRSACipher rsa = UseBouncyCastle == true ? new BouncyCastleRSA(RSA_KEY_SIZE) : new SystemRSA(RSA_KEY_SIZE);
+
+        rsa.ImportPrivateKeyPEM(privateKey);
+
+        var input = File.ReadAllBytes(InputFile);
+
+        var signature = rsa.SignData(input);
+
+        File.WriteAllBytes(OutputFile, signature);
+    }
+
+    public void RSAVerify(string InputFile, string PublicKeyFile, string SignatureFile, [Option('b', null)] bool? UseBouncyCastle, [Option('v', null)] bool? Verbose)
+    {
+        var publicKey = File.ReadAllText(PublicKeyFile);
+
+        IRSACipher rsa = UseBouncyCastle == true ? new BouncyCastleRSA(RSA_KEY_SIZE) : new SystemRSA(RSA_KEY_SIZE);
+
+        rsa.ImportPublicKeyPEM(publicKey);
+
+        var input = File.ReadAllBytes(InputFile);
+
+        var signature = File.ReadAllBytes(SignatureFile);
+
+        var verified = rsa.VerifyData(input, signature);
+
+        Console.WriteLine($"Signature is {(verified ? "valid" : "invalid")}");
     }
 
 #pragma warning restore CA1822 // Mark members as static

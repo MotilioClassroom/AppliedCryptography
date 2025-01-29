@@ -9,13 +9,14 @@ namespace CryptoLab.Hash;
 
 public class BouncyCastleHash : IHash
 {
-    public string ComputeHash(byte[] data, Algorithm algorithm)
+    public byte[] ComputeHash(byte[] data, Algorithm algorithm)
     {
 
         IDigest digest = algorithm switch
         {
             Algorithm.SHA256 => new Sha256Digest(),
             Algorithm.SHA512 => new Sha512Digest(),
+            Algorithm.MD5 => new MD5Digest(),
             _ => throw new NotImplementedException(),
         };
 
@@ -25,10 +26,10 @@ public class BouncyCastleHash : IHash
 
         digest.DoFinal(hashedBytes, 0);
 
-        return Convert.ToHexString(hashedBytes);
+        return hashedBytes;
     }
 
-    public string ComputeHash(string data, Algorithm algorithm)
+    public byte[] ComputeHash(string data, Algorithm algorithm)
     {
         return ComputeHash(Encoding.UTF8.GetBytes(data), algorithm);
     }
